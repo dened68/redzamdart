@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>31477721028-jks55qv0rjv61hmvq18136llapdpk3nf.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.31477721028-jks55qv0rjv61hmvq18136llapdpk3nf</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCOQrUcXfb6sLMmkTr2fLfD4aqd0lFSCP8</string>
+	<key>GCM_SENDER_ID</key>
+	<string>31477721028</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.redzamdart</string>
+	<key>PROJECT_ID</key>
+	<string>redzam-8827f</string>
+	<key>STORAGE_BUCKET</key>
+	<string>redzam-8827f.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:31477721028:ios:a41d93905271b94129a691</string>
+</dict>
+</plist>

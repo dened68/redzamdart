@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "31477721028",
+    "project_id": "redzam-8827f",
+    "storage_bucket": "redzam-8827f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:31477721028:android:b4e8e5296c3db04829a691",
+        "android_client_info": {
+          "package_name": "com.example.redzamdart"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "31477721028-j4vb6q92squmai8725sslvqt2n6svdtj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDUpfUA3kPfSeF6Qujk-hx_ezDFWeREfn0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "31477721028-j4vb6q92squmai8725sslvqt2n6svdtj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

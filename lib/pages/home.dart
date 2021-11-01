@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -30,36 +32,44 @@ class _HomeState extends State<Home> {
         backgroundColor: Colors.black,
         centerTitle: true,
       ),
-      body: ListView.builder(
-        itemCount: zamlist.length,
-        itemBuilder: (BuildContext context, int index) {
-          return Dismissible(
-            key: Key(zamlist[index]),
-            child: Card(
-              color: Colors.grey[800],
-              child: ListTile(
-                title: Text(
-                  zamlist[index],
-                  style: TextStyle(color: Colors.white),
-                ),
-                trailing: IconButton(
-                    // ignore: prefer_const_constructors
-                    icon: Icon(
-                      Icons.delete_forever,
-                      color: Colors.orange,
+      body: StreamBuilder(
+        stream: FirebaseFirestore.instance.collection('items').snapshots(),
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (!snapshot.hasData) return Text('нету');
+          return ListView.builder(
+            itemCount: snapshot.data!.docs.length,
+            itemBuilder: (BuildContext context, int index) {
+              return Dismissible(
+                key: Key(snapshot.data!.docs[index].id),
+                child: Card(
+                  color: Colors.grey[800],
+                  child: ListTile(
+                    title: Text(
+                      snapshot.data!.docs[index].get('item'),
+                      style: TextStyle(color: Colors.white),
                     ),
-                    onPressed: () {
-                      setState(() {
-                        zamlist.removeAt(index);
-                      });
-                    }),
-              ),
-            ),
-            onDismissed: (direction) {
-              //if(direction == DismissDirection.endToStart )
-              setState(() {
-                zamlist.removeAt(index);
-              });
+                    trailing: IconButton(
+                        // ignore: prefer_const_constructors
+                        icon: Icon(
+                          Icons.delete_forever,
+                          color: Colors.orange,
+                        ),
+                        onPressed: () {
+                          FirebaseFirestore.instance
+                              .collection('items')
+                              .doc(snapshot.data!.docs[index].id)
+                              .delete();
+                        }),
+                  ),
+                ),
+                onDismissed: (direction) {
+                  //if(direction == DismissDirection.endToStart )
+                  FirebaseFirestore.instance
+                      .collection('items')
+                      .doc(snapshot.data!.docs[index].id)
+                      .delete();
+                },
+              );
             },
           );
         },
@@ -97,10 +107,10 @@ class _HomeState extends State<Home> {
                   actions: [
                     ElevatedButton(
                         onPressed: () {
-                          setState(() {
-                            zamlist.add(userToDo);
-                            Navigator.of(context).pop();
-                          });
+                          FirebaseFirestore.instance
+                              .collection('items')
+                              .add({'item': userToDo});
+                          Navigator.of(context).pop();
                         },
                         style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all<Color?>(
