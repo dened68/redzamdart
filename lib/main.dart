@@ -1,20 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:redzamdart/pages/home.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:redzam1/pages/home.dart';
 
-void main() {
-  initFirebase();
-  initFirebase();
-  runApp(MaterialApp(
-    theme: ThemeData(
-      primaryColor: Colors.orange[700],
-    ),
-    home: Home(),
-  ));
+Future main() async {
+  runApp(MyApp());
 }
 
-void initFirebase() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+class MyApp extends StatelessWidget {
+  static final String title = 'заметки';
+
+  @override
+  Widget build(BuildContext context) => MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: title,
+        themeMode: ThemeMode.dark,
+        theme: ThemeData(
+          primaryColor: Colors.black,
+          scaffoldBackgroundColor: Colors.blueGrey.shade900,
+          appBarTheme: AppBarTheme(
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+          ),
+        ),
+        home: Home(),
+      );
 }

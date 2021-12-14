@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.redzamdart">
+    package="com.example.redzam1">
    <application
-        android:label="redzamdart"
+        android:label="redzam1"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

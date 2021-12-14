@@ -1,4 +1,4 @@
-name: redzamdart
+name: redzam1
 description: A new Flutter project.
 
 # The following line prevents the package from being accidentally published to
@@ -27,11 +27,11 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
-  cloud_firestore: ^2.5.4
   cupertino_icons: ^1.0.2
-  firebase_core: ^1.8.0
   flutter:
     sdk: flutter
+  intl: ^0.17.0
+  sqflite: ^2.0.1
 
 dev_dependencies:
   flutter_lints: ^1.0.0

@@ -1,127 +1,120 @@
+// ignore_for_file: file_names
+import 'package:redzam1/db/notes_database.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:redzam1/model/note.dart';
+import 'package:redzam1/pages/note_detail_page.dart';
+import 'package:redzam1/pages/edit_note_page.dart';
+import 'dart:math';
+
+final _lightColors = [
+  Colors.amber.shade300,
+  Colors.lightGreen.shade300,
+  Colors.lightBlue.shade300,
+  Colors.orange.shade300,
+  Colors.pinkAccent.shade100,
+  Colors.tealAccent.shade100
+];
 
 class Home extends StatefulWidget {
-  const Home({Key? key}) : super(key: key);
+  Home({Key? key}) : super(key: key);
 
   @override
-  State<Home> createState() => _HomeState();
+  _HomeState createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
-  String userToDo = '';
-  List zamlist = [];
+  bool isLoading = false;
+  late List<Note> notes;
+  final _random = Random();
 
   @override
   void initState() {
     super.initState();
+    refreshNotes();
+  }
 
-    zamlist.addAll(['артур', 'не артур', 'куда же без крепления']);
+  @override
+  void dispose() {
+    NotesDatabase.instance.close();
+
+    super.dispose();
+  }
+
+  Future refreshNotes() async {
+    setState(() => isLoading = true);
+
+    this.notes = await NotesDatabase.instance.readAllNotes();
+
+    setState(() => isLoading = false);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
       appBar: AppBar(
         title: Text(
           'Заметки',
-          style: TextStyle(color: Colors.orange[700]),
+          style: TextStyle(fontSize: 24),
         ),
-        backgroundColor: Colors.black,
-        centerTitle: true,
       ),
-      body: StreamBuilder(
-        stream: FirebaseFirestore.instance.collection('items').snapshots(),
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (!snapshot.hasData) return Text('нету');
-          return ListView.builder(
-            itemCount: snapshot.data!.docs.length,
-            itemBuilder: (BuildContext context, int index) {
-              return Dismissible(
-                key: Key(snapshot.data!.docs[index].id),
-                child: Card(
-                  color: Colors.grey[800],
-                  child: ListTile(
-                    title: Text(
-                      snapshot.data!.docs[index].get('item'),
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    trailing: IconButton(
-                        // ignore: prefer_const_constructors
-                        icon: Icon(
-                          Icons.delete_forever,
-                          color: Colors.orange,
-                        ),
-                        onPressed: () {
-                          FirebaseFirestore.instance
-                              .collection('items')
-                              .doc(snapshot.data!.docs[index].id)
-                              .delete();
-                        }),
-                  ),
-                ),
-                onDismissed: (direction) {
-                  //if(direction == DismissDirection.endToStart )
-                  FirebaseFirestore.instance
-                      .collection('items')
-                      .doc(snapshot.data!.docs[index].id)
-                      .delete();
-                },
-              );
-            },
-          );
-        },
+      body: Center(
+        child: isLoading
+            ? CircularProgressIndicator()
+            : notes.isEmpty
+                ? Text(
+                    'Нет заметок',
+                    style: TextStyle(color: Colors.white, fontSize: 24),
+                  )
+                : ListView.builder(
+                    itemCount: notes.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Dismissible(
+                          key: ValueKey<Note>(notes[index]),
+                          child: GestureDetector(
+                              onTap: () async {
+                                await Navigator.of(context)
+                                    .push(MaterialPageRoute(
+                                  builder: (context) =>
+                                      NoteDetailPage(noteId: notes[index].id!),
+                                ));
+
+                                refreshNotes();
+                              },
+                              child: Card(
+                                color: Colors.primaries[
+                                    _random.nextInt(Colors.primaries.length)],
+                                child: Container(
+                                  constraints: BoxConstraints(minHeight: 100),
+                                  padding: EdgeInsets.all(8),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      SizedBox(height: 4),
+                                      Text(
+                                        notes[index].title,
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              )));
+                    }),
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.grey[800],
-        child: Icon(
-          Icons.add,
-          color: Colors.orange,
-        ),
-        onPressed: () {
-          showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                const kOrange = const Color(0xFFffd600);
-                return AlertDialog(
-                  backgroundColor: Colors.grey[800],
-                  title: Text(
-                    'Новая заметка',
-                    style: TextStyle(color: Colors.orange[700]),
-                  ),
-                  content: TextField(
-                    style: TextStyle(color: Colors.white),
-                    cursorColor: Colors.orange,
-                    decoration: InputDecoration(
-                        focusedBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(color: Colors.orange)),
-                        enabledBorder: OutlineInputBorder(
-                            borderSide:
-                                const BorderSide(color: Colors.orange))),
-                    onChanged: (String value) {
-                      userToDo = value;
-                    },
-                  ),
-                  actions: [
-                    ElevatedButton(
-                        onPressed: () {
-                          FirebaseFirestore.instance
-                              .collection('items')
-                              .add({'item': userToDo});
-                          Navigator.of(context).pop();
-                        },
-                        style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all<Color?>(
-                                Colors.grey[700])),
-                        child: Text(
-                          'добавить',
-                          style: TextStyle(color: Colors.orange[700]),
-                        ))
-                  ],
-                );
-              });
+        backgroundColor: Colors.black,
+        child: Icon(Icons.add),
+        onPressed: () async {
+          await Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => AddEditNotePage()),
+          );
+
+          refreshNotes();
         },
       ),
     );
